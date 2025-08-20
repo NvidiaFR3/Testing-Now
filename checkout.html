@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header><h1>Checkout</h1></header>
+  <main>
+    <div id="summary"></div>
+    <label>Kode Voucher:</label>
+    <input type="text" id="voucher" placeholder="FR3ALLSHOP" />
+    <button onclick="applyVoucher()">Pakai</button>
+    <p>Total: <span id="total">Rp 0</span></p>
+    <label>Nomor WhatsApp:</label>
+    <input type="text" id="nomor" placeholder="628xxxx" />
+    <button onclick="proceed()">Lanjut Bayar</button>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = parseInt(params.get("id"));
+    const varian = params.get("varian");
+    const p = produk[id];
+    let harga = p.harga;
+
+    document.getElementById("summary").innerHTML = `
+      <h3>${p.nama} - ${varian}</h3>
+      <p>Harga: Rp ${harga.toLocaleString()}</p>
+    `;
+
+    let total = harga * 1.01; // + pajak 1%
+    document.getElementById("total").textContent = `Rp ${total.toLocaleString()}`;
+
+    function applyVoucher() {
+      const v = document.getElementById("voucher").value;
+      if (v.toUpperCase() === "FR3ALLSHOP") {
+        total = harga * 1.01 * 0.2;
+        alert("Diskon 80% diterapkan!");
+      } else {
+        total = harga * 1.01;
+        alert("Kode tidak valid");
+      }
+      document.getElementById("total").textContent = `Rp ${Math.round(total).toLocaleString()}`;
+    }
+
+    function proceed() {
+      const nomor = document.getElementById("nomor").value.trim();
+      if (!nomor) return alert("Masukkan nomor WhatsApp");
+      location.href = `payment.html?id=${id}&varian=${encodeURIComponent(varian)}&nomor=${nomor}&amount=${Math.round(total)}`;
+    }
+  </script>
+</body>
+</html>
