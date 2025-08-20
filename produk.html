@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Produk</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1 id="nama-produk"></h1>
+  </header>
+  <main id="detail"></main>
+  <nav class="bottom-nav">
+    <a href="index.html">Dashboard</a>
+    <a href="search.html">Search</a>
+    <a href="produk-terlaris.html">Produk Terlaris</a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get("id"));
+    const p = produk[id];
+    document.getElementById("nama-produk").textContent = p.nama;
+    document.getElementById("detail").innerHTML = `
+      ${p.foto ? `<img src="${p.foto}" alt="${p.nama}" />` : "<p>Foto Produk Tidak Ada</p>"}
+      <p>${p.deskripsi}</p>
+      <label>Pilih Varian:</label>
+      <select id="varian">
+        ${p.variasi.map(v => `<option value="${v}">${v}</option>`)}
+      </select>
+      <button onclick="checkout(${id})">Beli Sekarang</button>
+    `;
+
+    function checkout(id) {
+      const varian = document.getElementById("varian").value;
+      location.href = `checkout.html?id=${id}&varian=${encodeURIComponent(varian)}`;
+    }
+  </script>
+</body>
+</html>
